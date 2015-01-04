@@ -2,7 +2,9 @@ package au.com.innovus.starcraft2calendar;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -35,21 +38,15 @@ import java.util.Objects;
  */
 public class PlaceholderFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    Place mHolder;
     private static final String URL =
             "http://www.teamliquid.net/calendar/xml/calendar.xml";
-    List<XmlParser.Entry> entries = null;
     // Whether there is a Wi-Fi connection.
     private static boolean wifiConnected = false;
     // Whether there is a mobile connection.
     private static boolean mobileConnected = false;
+    Place mHolder;
+    List<XmlParser.Entry> entries = null;
 
-
-
-    public interface Place{
-
-        public List<XmlParser.Entry> getArray();
-    }
 
     public PlaceholderFragment() {
     }
@@ -72,7 +69,14 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
         super.onStart();
 
         updateConnectedFlags();
-        new DownloadXmlTask().execute(URL);
+
+        if (mobileConnected || wifiConnected) {
+            new DownloadXmlTask().execute(URL);
+        } else {
+            Toast.makeText(getActivity(), "Unable to load content. Check your network connection", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @Override
@@ -89,26 +93,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
 
     }
 
-    // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
-    private class DownloadXmlTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                return loadXmlFromNetwork(urls[0]);
-            } catch (IOException e) {
-                return "Connection error";
-            } catch (XmlPullParserException e) {
-                return "XML error";
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            loadIU();
-        }
-    }
-
-    private String loadXmlFromNetwork(String urlString) throws  XmlPullParserException, IOException{
+    private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
 
         XmlParser xmlParser = new XmlParser();
 
@@ -119,7 +104,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
             stream = downloadUrl(urlString);
             Log.d("MAIN", "stream donwloaded");
             entries = xmlParser.parse(stream);
-            Log.d("ENTRIES SIZE", ""+entries.size());
+            Log.d("ENTRIES SIZE", "" + entries.size());
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
@@ -148,33 +133,16 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
 
         ListView list = (ListView) getActivity().findViewById(R.id.listView);
 
-        EventAdapter adapter = new EventAdapter(getActivity().getApplicationContext(),R.layout.list_view_layout, entries);
+        EventAdapter adapter = new EventAdapter(getActivity().getApplicationContext(), R.layout.list_view_layout, entries);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
     }
 
-    class EventAdapter extends ArrayAdapter<XmlParser.Entry> {
-
-        List<XmlParser.Entry> entries;
-        public EventAdapter(Context context, int resource, List<XmlParser.Entry> objects) {
-            super(context, resource, objects);
-            entries = objects;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = getActivity().getLayoutInflater().inflate(R.layout.list_view_layout, parent, false);
-            TextView title = (TextView) v.findViewById(R.id.text_view_list_title);
-            title.setText(entries.get(position).title);
-            TextView time = (TextView) v.findViewById(R.id.text_view_list_time);
-            time.setText(""+ entries.get(position).day);
-            return v;
-        }
-    }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+
     // Checks the network connection and sets the wifiConnected and mobileConnected
     // variables accordingly.
     private void updateConnectedFlags() {
@@ -190,4 +158,50 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
             mobileConnected = false;
         }
     }
+
+    public interface Place {
+
+        public List<XmlParser.Entry> getArray();
+    }
+
+    // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
+    private class DownloadXmlTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return loadXmlFromNetwork(urls[0]);
+            } catch (IOException e) {
+                return "Connection error";
+            } catch (XmlPullParserException e) {
+                return "XML error";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            loadIU();
+        }
+    }
+
+    class EventAdapter extends ArrayAdapter<XmlParser.Entry> {
+
+        List<XmlParser.Entry> entries;
+
+        public EventAdapter(Context context, int resource, List<XmlParser.Entry> objects) {
+            super(context, resource, objects);
+            entries = objects;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = getActivity().getLayoutInflater().inflate(R.layout.list_view_layout, parent, false);
+            TextView title = (TextView) v.findViewById(R.id.text_view_list_title);
+            title.setText(entries.get(position).title);
+            TextView time = (TextView) v.findViewById(R.id.text_view_list_time);
+            time.setText("" + entries.get(position).day);
+            return v;
+        }
+    }
+
+
 }

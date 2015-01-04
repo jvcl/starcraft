@@ -1,11 +1,17 @@
 package au.com.innovus.starcraft2calendar;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -61,4 +67,6 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
