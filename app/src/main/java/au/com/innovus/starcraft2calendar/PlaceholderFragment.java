@@ -3,6 +3,8 @@ package au.com.innovus.starcraft2calendar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +39,10 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     private static final String URL =
             "http://www.teamliquid.net/calendar/xml/calendar.xml";
     List<XmlParser.Entry> entries = null;
+    // Whether there is a Wi-Fi connection.
+    private static boolean wifiConnected = false;
+    // Whether there is a mobile connection.
+    private static boolean mobileConnected = false;
 
 
 
@@ -64,6 +70,8 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onStart() {
         super.onStart();
+
+        updateConnectedFlags();
         new DownloadXmlTask().execute(URL);
     }
 
@@ -166,5 +174,20 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
+    // Checks the network connection and sets the wifiConnected and mobileConnected
+    // variables accordingly.
+    private void updateConnectedFlags() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+        if (activeInfo != null && activeInfo.isConnected()) {
+            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+        } else {
+            wifiConnected = false;
+            mobileConnected = false;
+        }
     }
 }
