@@ -39,8 +39,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     private static boolean wifiConnected = false;
     // Whether there is a mobile connection.
     private static boolean mobileConnected = false;
-    Place mHolder;
-    List<XmlParser.Event> entries = null;
+    private List<XmlParser.Event> entries = null;
 
 
     public PlaceholderFragment() {
@@ -63,6 +62,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     public void onStart() {
         super.onStart();
 
+        //Check for internet connection in the device
         updateConnectedFlags();
 
         if (mobileConnected || wifiConnected) {
@@ -70,8 +70,6 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
         } else {
             Toast.makeText(getActivity(), "Unable to load content. Check your network connection", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     @Override
@@ -91,7 +89,6 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
 
         XmlParser xmlParser = new XmlParser();
-
         InputStream stream = null;
         Calendar rightNow = Calendar.getInstance();
         DateFormat formatter = new SimpleDateFormat("MMM dd h:mmaa");
@@ -107,10 +104,10 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
                 stream.close();
             }
         }
-
         return "";
     }
 
+    //HTTP Request
     private InputStream downloadUrl(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -127,12 +124,12 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     public void loadIU() {
 
         ListView list = (ListView) getActivity().findViewById(R.id.listView);
-
         EventAdapter adapter = new EventAdapter(getActivity().getApplicationContext(), R.layout.list_view_layout, entries);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
     }
 
+    //Listview listener
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -154,12 +151,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
         }
     }
 
-    public interface Place {
-
-        public List<XmlParser.Event> getArray();
-    }
-
-    // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
+    // Implementation of AsyncTask used to download XML feed.
     private class DownloadXmlTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -178,6 +170,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
         }
     }
 
+    //Custom Array adapter
     class EventAdapter extends ArrayAdapter<XmlParser.Event> {
 
         List<XmlParser.Event> entries;
@@ -197,6 +190,4 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
             return v;
         }
     }
-
-
 }
