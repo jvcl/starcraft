@@ -1,25 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="vertical">
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:id="@+id/text_view_list_title"
-    android:textColor="#000000"
-    android:text="demo"
-    android:gravity="center_vertical">
+    android:orientation="horizontal">
 
-</TextView>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:id="@+id/text_view_list_time"
-        android:textColor="#000000"
-        android:text="demo"
-        android:gravity="center_vertical">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+         />
 
-    </TextView>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/text_view_list_title"
+            android:textColor="#000000"
+            android:text="demo"
+            android:padding="5dp"
+            android:gravity="center_vertical">
+
+        </TextView>
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/text_view_list_time"
+            android:textColor="#000000"
+            android:text="demo"
+            android:padding="5dp"
+            android:gravity="center_vertical">
+
+        </TextView>
+
+
+        </LinearLayout>
+
 
 
 </LinearLayout>

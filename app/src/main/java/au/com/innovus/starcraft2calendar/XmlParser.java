@@ -113,11 +113,11 @@ public class XmlParser {
         Log.d("PARSER", "sc2 found " + year + " " + month + " " + day + " " +hour+" "+minute+" "+ title);
         return new Event(
 
-                Integer.parseInt(year),
-                Integer.parseInt(month),
-                Integer.parseInt(day),
-                Integer.parseInt(hour),
-                Integer.parseInt(minute),
+                year,
+                month,
+                day,
+                hour,
+                minute,
                 type,
                 title,
                 short_title,
@@ -148,17 +148,18 @@ public class XmlParser {
     // This class represents a single entry (post) in the XML feed.
     // It includes the data members "title," "link," and "summary."
     public static class Event {
-        public final int year;
-        public final int month;
-        public final int day;
-        public final int hour;
-        public final int minutes;
+        public final String year;
+        public String month;
+        public String day;
+        public final String hour;
+        public final String minutes;
         public final String type;
         public final String title;
         public final String short_title;
         public final String description;
+        public final String date;
 
-        private Event(int year, int month, int day, int hour, int minutes, String type, String title, String short_title, String description) {
+        private Event(String year, String month, String day, String hour, String minutes, String type, String title, String short_title, String description) {
             this.year = year;
             this.month = month;
             this.day = day;
@@ -168,6 +169,13 @@ public class XmlParser {
             this.title = title;
             this.short_title = short_title;
             this.description = description;
+
+            if(this.month.length()==1)
+                this.month = "0"+this.month;
+            if(this.day.length()==1)
+                this.day = "0"+this.day;
+            date = "20"+year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+"00";
+            formatDate(date);
         }
 
         @Override
@@ -175,14 +183,14 @@ public class XmlParser {
             return title;
         }
 
-        private void formatDate(){
+        private void formatDate(String date){
 
             SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             sourceFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
 
             Date sourceDate = null;
             try {
-                sourceDate = sourceFormat.parse("2015-01-05 23:30:00"); //Date is in KST now
+                sourceDate = sourceFormat.parse(date); //Date is in KST now
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -203,6 +211,4 @@ public class XmlParser {
             Log.d("TIMEZONE:", result);
         }
     }
-
-
 }
