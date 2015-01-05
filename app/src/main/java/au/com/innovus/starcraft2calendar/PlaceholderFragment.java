@@ -125,6 +125,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
 
         ListView list = (ListView) getActivity().findViewById(R.id.listView);
 
+        //Remove entries that are older than the current time in the device
         for (int i = entries.size()-1; i>=0; i--){
             if (entries.get(i).isOlderEvent())
                 entries.remove(i);
