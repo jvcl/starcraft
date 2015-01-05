@@ -124,6 +124,12 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     public void loadIU() {
 
         ListView list = (ListView) getActivity().findViewById(R.id.listView);
+
+        for (int i = entries.size()-1; i>=0; i--){
+            if (entries.get(i).isOlderEvent())
+                entries.remove(i);
+        }
+
         EventAdapter adapter = new EventAdapter(getActivity().getApplicationContext(), R.layout.list_view_layout, entries);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);

@@ -34,11 +34,7 @@
             android:textColor="#ff0024ea"
             android:text="demo"
             android:padding="5dp"
-            android:gravity="center_vertical"
-            >
+            android:gravity="center_vertical">
         </TextView>
         </LinearLayout>
-
-
-
 </LinearLayout>

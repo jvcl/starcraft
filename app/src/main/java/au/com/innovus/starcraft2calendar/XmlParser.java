@@ -158,6 +158,7 @@ public class XmlParser {
         public final String short_title;
         public final String description;
         public String date;
+        private Date localTime = null;
 
         private Event(String year, String month, String day, String hour, String minutes, String type, String title, String short_title, String description) {
             this.year = year;
@@ -210,7 +211,19 @@ public class XmlParser {
             String result = destFormat.format(sourceDate);
             Log.d("TIMEZONE:", result);
 
+            //Save a Date object with the local time to later compare
+            try {
+                localTime = destFormat.parse(result); //Date is in KST now
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             return result;
+        }
+        public boolean isOlderEvent(){
+
+            Date now = new Date();
+            return localTime.compareTo(now) < 0;
+
         }
     }
 }
