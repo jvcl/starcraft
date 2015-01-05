@@ -14,6 +14,8 @@ import java.util.List;
 /**
  * Created by jorge on 3/01/15.
  */
+
+
 public class XmlParser {
     private static final String ns = null;
 
