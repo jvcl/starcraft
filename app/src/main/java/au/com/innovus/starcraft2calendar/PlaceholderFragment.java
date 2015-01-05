@@ -82,8 +82,6 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
