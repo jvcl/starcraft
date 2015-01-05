@@ -99,9 +99,8 @@ public class EventDetailFragment extends Fragment {
         TextView description = (TextView) view.findViewById(R.id.details_description);
 
         XmlParser.Event event = mListener.getSelected();
-
         title.setText(event.title);
-        time.setText("Time");
+        time.setText(event.date);
         description.setText(event.description);
     }
 
