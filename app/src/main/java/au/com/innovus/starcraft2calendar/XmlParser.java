@@ -61,7 +61,7 @@ public class XmlParser {
 
 
                 if (isStarcraft) {
-                    //Log.d("PARSER", "sc2 found " + year + " " + month + " " + day + " " + title);
+                    Log.d("PARSER", "sc2 found " + year + " " + month + " " + day + " " +hour+" "+minute+" "+ title);
                     entries.add(new Entry(
 
                             Integer.parseInt(year),

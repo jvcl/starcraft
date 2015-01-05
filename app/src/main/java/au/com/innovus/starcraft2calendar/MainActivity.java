@@ -20,15 +20,19 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import au.com.innovus.starcraft2calendar.XmlParser.Entry;
+
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class MainActivity extends Activity {
-
 
 
     PlaceholderFragment placeholderFragment;
@@ -43,8 +47,32 @@ public class MainActivity extends Activity {
             getFragmentManager().beginTransaction().add(R.id.container, placeholderFragment)
                     .commit();
         }
-    }
 
+        SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sourceFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+
+        Date sourceDate = null;
+        try {
+            sourceDate = sourceFormat.parse("2015-01-05 23:30:00"); //Date is in KST now
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Get Calendar instance and current timezone of the device
+        Calendar cal = Calendar.getInstance();
+        TimeZone currentTZ = cal.getTimeZone();
+
+        //Format the date to the current time zone of the device
+        SimpleDateFormat destFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        destFormat.setTimeZone(currentTZ);
+
+        //int currentOffsetFromUTC = TimeZone.getTimeZone("Asia/Seoul").getRawOffset() + (TimeZone.getTimeZone("Asia/Seoul").inDaylightTime(sourceDate) ? TimeZone.getTimeZone("Asia/Seoul").getDSTSavings() : 0);
+        //String result = destFormat.format(sourceDate.getTime() + currentOffsetFromUTC);
+
+        //Log conversion
+        String result = destFormat.format(sourceDate);
+        Log.d("TIMEZONE:", result);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,6 +95,4 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }
