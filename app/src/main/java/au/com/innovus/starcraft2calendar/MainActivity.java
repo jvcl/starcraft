@@ -1,7 +1,10 @@
 package au.com.innovus.starcraft2calendar;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,11 +17,12 @@ import java.util.Date;
 import java.util.TimeZone;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PlaceholderFragment.PlaceHolderInterface, EventDetailFragment.OnFragmentInteractionListener {
 
 
-    PlaceholderFragment placeholderFragment;
-
+    private PlaceholderFragment placeholderFragment;
+    private EventDetailFragment eventDetailFragment;
+    private XmlParser.Event currentSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,8 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
 
             placeholderFragment = new PlaceholderFragment();
+            eventDetailFragment = EventDetailFragment.newInstance();
+
             getFragmentManager().beginTransaction().add(R.id.container, placeholderFragment)
                     .commit();
         }
@@ -51,5 +57,20 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Replace the fragment
+    @Override
+    public void showDetails(XmlParser.Event event) {
+        currentSelected = event;
+        if (eventDetailFragment!= null && !eventDetailFragment.isVisible()) {
+            getFragmentManager().beginTransaction().replace(R.id.container, eventDetailFragment).commit();
+        }
+    }
+
+
+    @Override
+    public XmlParser.Event getSelected() {
+        return currentSelected;
     }
 }

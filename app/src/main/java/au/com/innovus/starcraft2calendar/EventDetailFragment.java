@@ -25,6 +25,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -51,7 +52,6 @@ public class EventDetailFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static EventDetailFragment newInstance() {
         EventDetailFragment fragment = new EventDetailFragment();
-
         return fragment;
     }
 
@@ -63,7 +63,6 @@ public class EventDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
         }
     }
 
@@ -77,7 +76,7 @@ public class EventDetailFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            //55mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -90,6 +89,20 @@ public class EventDetailFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        TextView title = (TextView) view.findViewById(R.id.details_title);
+        TextView time = (TextView) view.findViewById(R.id.details_time);
+        TextView description = (TextView) view.findViewById(R.id.details_description);
+
+        XmlParser.Event event = mListener.getSelected();
+
+        title.setText(event.title);
+        time.setText("Time");
+        description.setText(event.description);
     }
 
     @Override
@@ -110,7 +123,7 @@ public class EventDetailFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public XmlParser.Event getSelected();
     }
 
 }

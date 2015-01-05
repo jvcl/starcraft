@@ -41,6 +41,8 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     private static boolean mobileConnected = false;
     private List<XmlParser.Event> entries = null;
 
+    private PlaceHolderInterface activityListener;
+
 
     public PlaceholderFragment() {
     }
@@ -48,8 +50,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        //mHolder = (Place) activity;
-
+        activityListener = (PlaceHolderInterface) activity;
     }
 
     @Override
@@ -138,6 +139,8 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        activityListener.showDetails(entries.get(position));
+
     }
 
     // Checks the network connection and sets the wifiConnected and mobileConnected
@@ -194,5 +197,10 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
             time.setText("" + entries.get(position).date);
             return v;
         }
+    }
+
+    public interface PlaceHolderInterface{
+
+        public void showDetails(XmlParser.Event event);
     }
 }
