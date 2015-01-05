@@ -8,7 +8,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public class XmlParser {
     private static final String ns = null;
 
-    public List<Entry> parse(InputStream in) throws XmlPullParserException, IOException {
+    public List<Event> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
 
             Log.d("FOUND", "IN PARSE");
@@ -32,10 +31,10 @@ public class XmlParser {
         }
     }
 
-    private List<Entry> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private List<Event> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         Log.d("FOUND", "IN READENTRY");
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Event> entries = new ArrayList<Event>();
         parser.require(XmlPullParser.START_TAG, ns, "calendar");
 
         String year = "";
@@ -55,30 +54,12 @@ public class XmlParser {
                 continue;
             }
             String name = parser.getName();
-
-
             if (name.equals("event-id")) {
-
-
                 if (isStarcraft) {
-                    Log.d("PARSER", "sc2 found " + year + " " + month + " " + day + " " +hour+" "+minute+" "+ title);
-                    entries.add(new Entry(
-
-                            Integer.parseInt(year),
-                            Integer.parseInt(month),
-                            Integer.parseInt(day),
-                            Integer.parseInt(hour),
-                            Integer.parseInt(minute),
-                            type,
-                            title,
-                            short_title,
-                            description
-                    ));
-
+                    entries.add(newEvent(year,month,day,hour,minute,type,title,short_title,description));
                 }
                 isStarcraft = true;
                 continue;
-
             } else if (!isStarcraft) {
                 continue;
             }
@@ -119,6 +100,24 @@ public class XmlParser {
         return entries;
     }
 
+    private Event newEvent(String year, String month, String day, String hour,
+                           String minute, String type, String title, String short_title,
+                           String description){
+        Log.d("PARSER", "sc2 found " + year + " " + month + " " + day + " " +hour+" "+minute+" "+ title);
+        return new Event(
+
+                Integer.parseInt(year),
+                Integer.parseInt(month),
+                Integer.parseInt(day),
+                Integer.parseInt(hour),
+                Integer.parseInt(minute),
+                type,
+                title,
+                short_title,
+                description
+        );
+    }
+
     // Skips tags the parser isn't interested in. Uses depth to handle nested tags. i.e.,
     // if the next tag after a START_TAG isn't a matching END_TAG, it keeps going until it
     // finds the matching END_TAG (as indicated by the value of "depth" being 0).
@@ -141,7 +140,7 @@ public class XmlParser {
 
     // This class represents a single entry (post) in the XML feed.
     // It includes the data members "title," "link," and "summary."
-    public static class Entry {
+    public static class Event {
         public final int year;
         public final int month;
         public final int day;
@@ -152,7 +151,7 @@ public class XmlParser {
         public final String short_title;
         public final String description;
 
-        private Entry(int year, int month, int day, int hour, int minutes, String type, String title, String short_title, String description) {
+        private Event(int year, int month, int day, int hour, int minutes, String type, String title, String short_title, String description) {
             this.year = year;
             this.month = month;
             this.day = day;

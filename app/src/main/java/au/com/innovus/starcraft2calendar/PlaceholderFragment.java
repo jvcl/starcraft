@@ -2,9 +2,7 @@ package au.com.innovus.starcraft2calendar;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -28,10 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by jorge on 3/01/15.
@@ -45,7 +40,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
     // Whether there is a mobile connection.
     private static boolean mobileConnected = false;
     Place mHolder;
-    List<XmlParser.Entry> entries = null;
+    List<XmlParser.Event> entries = null;
 
 
     public PlaceholderFragment() {
@@ -161,7 +156,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
 
     public interface Place {
 
-        public List<XmlParser.Entry> getArray();
+        public List<XmlParser.Event> getArray();
     }
 
     // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
@@ -183,11 +178,11 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
         }
     }
 
-    class EventAdapter extends ArrayAdapter<XmlParser.Entry> {
+    class EventAdapter extends ArrayAdapter<XmlParser.Event> {
 
-        List<XmlParser.Entry> entries;
+        List<XmlParser.Event> entries;
 
-        public EventAdapter(Context context, int resource, List<XmlParser.Entry> objects) {
+        public EventAdapter(Context context, int resource, List<XmlParser.Event> objects) {
             super(context, resource, objects);
             entries = objects;
         }
