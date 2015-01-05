@@ -157,7 +157,7 @@ public class XmlParser {
         public final String title;
         public final String short_title;
         public final String description;
-        public final String date;
+        public String date;
 
         private Event(String year, String month, String day, String hour, String minutes, String type, String title, String short_title, String description) {
             this.year = year;
@@ -174,8 +174,8 @@ public class XmlParser {
                 this.month = "0"+this.month;
             if(this.day.length()==1)
                 this.day = "0"+this.day;
-            date = "20"+year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+"00";
-            formatDate(date);
+            date = year+"-"+month+"-"+day+" "+hour+":"+minutes+":"+"00";
+            date = formatDate(date);
         }
 
         @Override
@@ -183,7 +183,7 @@ public class XmlParser {
             return title;
         }
 
-        private void formatDate(String date){
+        private String formatDate(String date){
 
             SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             sourceFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
@@ -209,6 +209,8 @@ public class XmlParser {
             //Log conversion
             String result = destFormat.format(sourceDate);
             Log.d("TIMEZONE:", result);
+
+            return result;
         }
     }
 }

@@ -186,7 +186,7 @@ public class PlaceholderFragment extends Fragment implements AdapterView.OnItemC
             TextView title = (TextView) v.findViewById(R.id.text_view_list_title);
             title.setText(entries.get(position).title);
             TextView time = (TextView) v.findViewById(R.id.text_view_list_time);
-            time.setText("" + entries.get(position).day);
+            time.setText("" + entries.get(position).date);
             return v;
         }
     }
